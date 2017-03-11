@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         transaction = manager.beginTransaction();
         switch (v.getId()){
             case R.id.vk_button:
-                transaction.replace(R.id.content_contaiter, WebViewFragment.newInstance("http://vk.com"));
+                transaction.replace(R.id.content_contaiter, WebViewFragment.newInstance("https://oauth.vk.com/authorize?client_id=5490057&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.52"));
         }
         transaction.commit();
     }

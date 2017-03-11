@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import support.VK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +22,7 @@ import android.webkit.WebView;
  */
 public class WebViewFragment extends Fragment {
 
-    WebView webview;
+    WebView webView;
     String Url;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,8 +69,21 @@ public class WebViewFragment extends Fragment {
     @Override
     public void onStart() {
 
-        webview = (WebView) getActivity().findViewById(R.id.web_view);
-        webview.loadUrl(Url);
+        webView = (WebView) getActivity().findViewById(R.id.web_view);
+        webView.loadUrl(Url);
+        webView.loadUrl(VK.getAuthUrl("5141808", "2097150"));
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                String token = VK.findAccessTokenInURL(url);
+                String user_id = VK.findUserIdInURL(url);
+                if (token != null) {
+                    // TODO кинуть запрос Антону
+                }
+            }
+        });
 
         super.onStart();
     }
