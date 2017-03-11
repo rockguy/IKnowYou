@@ -16,7 +16,7 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AccountFragment.OnFragmentInteractionListener
-,CameraFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener {
+,CameraFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener, WebViewFragment.OnFragmentInteractionListener {
 
     private static FragmentManager manager;
     private static FragmentTransaction transaction;
@@ -107,5 +107,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+    public void NewAccountOnClick (View v) {
+        transaction = manager.beginTransaction();
+        switch (v.getId()){
+            case R.id.vk_button:
+                transaction.replace(R.id.content_contaiter, WebViewFragment.newInstance("http://vk.com"));
+        }
+        transaction.commit();
     }
 }

@@ -5,7 +5,7 @@
         <item
             android:id="@+id/add_account"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Добавить аккаунт" />
+            android:title="@string/menu_item_add_account" />
         <listView
             android:id="@+id/account_conteiner"
             />

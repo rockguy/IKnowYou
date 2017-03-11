@@ -1,13 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vinnik.iknowyou.AccountFragment">
+    tools:context="vinnik.iknowyou.AccountFragment"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <Button
+        android:text="@string/vk_string"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:id="@+id/vk_button"
+        android:background="@android:color/holo_orange_dark"
+        android:onClick="NewAccountOnClick"
+        android:layout_margin="20dp" />
 
-</FrameLayout>
+    <Button
+        android:text="@string/facebook_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/facebook_button"
+        android:background="@android:color/holo_orange_dark"
+        android:layout_margin="20dp" />
+
+    <Button
+        android:text="@string/twitter_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/twitter_button"
+        android:background="@android:color/holo_orange_dark"
+        android:layout_margin="20dp" />
+    <Button
+        android:text="@string/instagram_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/instagram_button"
+        android:background="@android:color/holo_orange_dark"
+        android:layout_margin="20dp" />
+</LinearLayout>
