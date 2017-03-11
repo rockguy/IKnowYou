@@ -6,10 +6,16 @@
     tools:context="vinnik.iknowyou.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/imageView2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/fab"
+        android:layout_alignParentTop="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -20,10 +26,10 @@
         app:srcCompat="@drawable/ic_menu_camera"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
+        app:backgroundTint="@android:color/holo_orange_dark"
+        android:layout_marginEnd="29dp"
         android:layout_marginBottom="35dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="47dp"
-        app:backgroundTint="@android:color/holo_orange_dark" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
