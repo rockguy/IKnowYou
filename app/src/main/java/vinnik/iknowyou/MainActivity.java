@@ -1,5 +1,6 @@
 package vinnik.iknowyou;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,10 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AccountFragment.OnFragmentInteractionListener
-,CameraFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener, WebViewFragment.OnFragmentInteractionListener {
+,HomeFragment.OnFragmentInteractionListener, WebViewFragment.OnFragmentInteractionListener {
 
     private static FragmentManager manager;
     private static FragmentTransaction transaction;
@@ -98,10 +103,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onCameraClick(View v){
-        transaction = manager.beginTransaction();
-        transaction.replace(R.id.content_contaiter, CameraFragment.newInstance());
-        transaction.addToBackStack(null);
-        transaction.commit();
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.initiateScan();
     }
 
     @Override
@@ -117,5 +120,18 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.content_contaiter, WebViewFragment.newInstance("http://vk.com"));
         }
         transaction.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Intent intent = new Intent();
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanResult != null) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    scanResult.getContents(), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        // else continue with any other code you need in the method
     }
 }
