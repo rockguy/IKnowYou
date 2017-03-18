@@ -1,6 +1,7 @@
 package vinnik.iknowyou;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,7 +80,11 @@ public class WebViewFragment extends Fragment {
                 super.onPageFinished(view, url);
                 String token = VK.findAccessTokenInURL(url);
                 String user_id = VK.findUserIdInURL(url);
-                if (token != null) {
+                if (token != null && user_id != null) {
+//                    getName(token);
+                    SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.SharedPreferencesForAccounts),Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+//                    editor.putString("VK")
                     // TODO кинуть запрос Антону
                 }
             }
@@ -88,6 +93,26 @@ public class WebViewFragment extends Fragment {
         super.onStart();
     }
 
+//    private void getName(String token){
+//        String urlForPersonData = "https://api.vk.com/method/users.get?&access_token=" + token;
+//        URL aURL = null;
+//        try {
+//            aURL = new URL(urlForPersonData);
+//            URLConnection conn = aURL.openConnection();
+//            conn.connect();
+//            InputStream is = conn.getInputStream();
+//            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+//            StringBuilder total = new StringBuilder();
+//            String line;
+//            while ((line = r.readLine()) != null) {
+//                total.append(line).append('\n');
+//            }
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
