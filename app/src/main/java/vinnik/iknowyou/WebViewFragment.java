@@ -92,6 +92,26 @@ public class WebViewFragment extends Fragment {
         super.onStart();
     }
 
+//    private void getName(String token){
+//        String urlForPersonData = "https://api.vk.com/method/users.get?&access_token=" + token;
+//        URL aURL = null;
+//        try {
+//            aURL = new URL(urlForPersonData);
+//            URLConnection conn = aURL.openConnection();
+//            conn.connect();
+//            InputStream is = conn.getInputStream();
+//            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+//            StringBuilder total = new StringBuilder();
+//            String line;
+//            while ((line = r.readLine()) != null) {
+//                total.append(line).append('\n');
+//            }
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

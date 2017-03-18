@@ -49,6 +49,7 @@ public class VK {
         return null;
     }
 
+
     private String token;
 
     public VK(String token) {
