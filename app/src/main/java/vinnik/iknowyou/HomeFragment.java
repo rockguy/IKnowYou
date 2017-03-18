@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
         }
         Bitmap barcode_bitmap = null;
         try {
-            barcode_bitmap = encodeAsBitmap("это текст", BarcodeFormat.QR_CODE, 200, 200);
+            barcode_bitmap = encodeAsBitmap("369021370", BarcodeFormat.QR_CODE, 200, 200);
         } catch (WriterException e) {
             e.printStackTrace();
         }

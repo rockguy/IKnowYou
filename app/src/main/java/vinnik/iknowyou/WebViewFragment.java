@@ -1,6 +1,7 @@
 package vinnik.iknowyou;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -80,7 +81,10 @@ public class WebViewFragment extends Fragment {
                 String token = VK.findAccessTokenInURL(url);
                 String user_id = VK.findUserIdInURL(url);
                 if (token != null) {
-                    // TODO кинуть запрос Антону
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
+                    editor.putString("vk_token", token);
+                    editor.putString("vk_id", user_id);
+                    editor.commit();
                 }
             }
         });

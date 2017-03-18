@@ -1,6 +1,8 @@
 package vinnik.iknowyou;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -19,13 +21,22 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.Callback;
+import retrofit2.Response;
+import support.VKResponse;
+import support.VKService;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AccountFragment.OnFragmentInteractionListener
 ,HomeFragment.OnFragmentInteractionListener, WebViewFragment.OnFragmentInteractionListener {
 
     private static FragmentManager manager;
     private static FragmentTransaction transaction;
-
+    private static VKService vkserv;
+    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -48,6 +59,17 @@ public class MainActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.add(R.id.content_contaiter, HomeFragment.newInstance());
         transaction.commit();
+
+        SharedPreferences prefs = getSharedPreferences("app", Context.MODE_PRIVATE);
+        prefs.getString("id", null);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        //...
+
+
+
+        editor.putString("id","");
+        editor.commit();
     }
 
     @Override
@@ -131,7 +153,36 @@ public class MainActivity extends AppCompatActivity
             Toast toast = Toast.makeText(getApplicationContext(),
                     scanResult.getContents(), Toast.LENGTH_SHORT);
             toast.show();
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.vk.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            vkserv = retrofit.create(VKService.class);
+
+
+            String accessToken = getSharedPreferences("settings", Context.MODE_PRIVATE).getString("vk_token","");
+
+            MainActivity.getApi().addFriend(scanResult.getContents(), "5.63", accessToken).enqueue(new Callback<VKResponse>() {
+                @Override
+                public void onResponse(Call<VKResponse> call, Response<VKResponse> response) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            response.body().getResponseCode().toString(), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                @Override
+                public void onFailure(Call<VKResponse> call, Throwable t) {
+                    System.out.println(t.toString());
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            t.toString(), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+
         }
         // else continue with any other code you need in the method
+    }
+
+    public static VKService getApi() {
+        return vkserv;
     }
 }
