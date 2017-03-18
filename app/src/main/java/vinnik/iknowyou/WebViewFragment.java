@@ -5,13 +5,24 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import support.User;
 import support.VK;
+import support.VKResponse;
+import support.VKService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +36,9 @@ public class WebViewFragment extends Fragment {
 
     WebView webView;
     String Url;
+
+    Retrofit retrofit;
+    VKService service;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String URL_PARAM = "url";
@@ -79,12 +93,30 @@ public class WebViewFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 String token = VK.findAccessTokenInURL(url);
-                String user_id = VK.findUserIdInURL(url);
+//                String user_id = VK.findUserIdInURL(url);
                 if (token != null) {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
                     editor.putString("vk_token", token);
-                    editor.putString("vk_id", user_id);
                     editor.commit();
+                    retrofit = new Retrofit.Builder().baseUrl("https://api.vk.com/").
+                            addConverterFactory(GsonConverterFactory.create()).build();
+                    service = retrofit.create(VKService.class);
+                    service.getInformation(token).enqueue(new Callback<VKResponse<List<User>>>() {
+                        @Override
+                        public void onResponse(Call<VKResponse<List<User>>> call, Response<VKResponse<List<User>>> response) {
+                            User user = response.body().response.get(0);
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
+                            editor.putInt("vk_id", user.Id);
+                            editor.putString("vk_firstName", user.FirstName);
+                            editor.putString("vk_lastName", user.LastName);
+                            editor.commit();
+                        }
+
+                        @Override
+                        public void onFailure(Call<VKResponse<List<User>>> call, Throwable t) {
+                            Log.i("MyApp","Упал (( " + t.getMessage());
+                        }
+                    });
                 }
             }
         });
@@ -92,26 +124,6 @@ public class WebViewFragment extends Fragment {
         super.onStart();
     }
 
-//    private void getName(String token){
-//        String urlForPersonData = "https://api.vk.com/method/users.get?&access_token=" + token;
-//        URL aURL = null;
-//        try {
-//            aURL = new URL(urlForPersonData);
-//            URLConnection conn = aURL.openConnection();
-//            conn.connect();
-//            InputStream is = conn.getInputStream();
-//            BufferedReader r = new BufferedReader(new InputStreamReader(is));
-//            StringBuilder total = new StringBuilder();
-//            String line;
-//            while ((line = r.readLine()) != null) {
-//                total.append(line).append('\n');
-//            }
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

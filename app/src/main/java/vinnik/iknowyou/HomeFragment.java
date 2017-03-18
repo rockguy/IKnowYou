@@ -4,21 +4,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;

@@ -7,12 +7,8 @@ import com.google.gson.annotations.SerializedName;
  * Created by User on 11.03.2017.
  */
 
-public class VKResponse {
+public class VKResponse<T> {
     @SerializedName("response")
     @Expose
-    private Integer response = null;
-
-    public Integer getResponseCode() {
-        return response;
-    }
+    public T response;
 }

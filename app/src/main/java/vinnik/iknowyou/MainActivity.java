@@ -16,17 +16,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.Callback;
-import retrofit2.Response;
-import support.VKResponse;
 import support.VKService;
 
 public class MainActivity extends AppCompatActivity
@@ -37,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private static FragmentTransaction transaction;
     private static VKService vkserv;
     private Retrofit retrofit;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         transaction.add(R.id.content_contaiter, HomeFragment.newInstance());
         transaction.commit();
 
-        SharedPreferences prefs = getSharedPreferences("app", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("app", Context.MODE_PRIVATE);
         prefs.getString("id", null);
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -70,6 +68,8 @@ public class MainActivity extends AppCompatActivity
 
         editor.putString("id","");
         editor.commit();
+
+
     }
 
     @Override
@@ -134,15 +134,27 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void refreshAccountList(){
+        ListView listView = (ListView) findViewById(R.id.account_conteiner);
+//
+//        listView.setAdapter( new ArrayAdapter<String>());
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+//                android.R.layout.simple_list_item_1, );
+//
+//        listView.setAdapter(adapter);
+    }
+
 
     public void NewAccountOnClick (View v) {
         transaction = manager.beginTransaction();
         switch (v.getId()){
             case R.id.vk_button:
+                transaction.addToBackStack(null);
                 transaction.replace(R.id.content_contaiter, WebViewFragment.newInstance("https://oauth.vk.com/authorize?client_id=5490057&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.52"));
         }
         transaction.commit();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -162,21 +174,21 @@ public class MainActivity extends AppCompatActivity
 
             String accessToken = getSharedPreferences("settings", Context.MODE_PRIVATE).getString("vk_token","");
 
-            MainActivity.getApi().addFriend(scanResult.getContents(), "5.63", accessToken).enqueue(new Callback<VKResponse>() {
-                @Override
-                public void onResponse(Call<VKResponse> call, Response<VKResponse> response) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            response.body().getResponseCode().toString(), Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                @Override
-                public void onFailure(Call<VKResponse> call, Throwable t) {
-                    System.out.println(t.toString());
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            t.toString(), Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            });
+//            MainActivity.getApi().addFriend(scanResult.getContents(), "5.63", accessToken).enqueue(new Callback<VKResponse>() {
+//                @Override
+//                public void onResponse(Call<VKResponse> call, Response<VKResponse> response) {
+//                    Toast toast = Toast.makeText(getApplicationContext(),
+//                            response.body().getResponseCode().toString(), Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//                @Override
+//                public void onFailure(Call<VKResponse> call, Throwable t) {
+//                    System.out.println(t.toString());
+//                    Toast toast = Toast.makeText(getApplicationContext(),
+//                            t.toString(), Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//            });
 
         }
         // else continue with any other code you need in the method

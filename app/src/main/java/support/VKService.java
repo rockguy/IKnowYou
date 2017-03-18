@@ -1,5 +1,7 @@
 package support;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -9,6 +11,9 @@ import retrofit2.http.Query;
  */
 
 public interface VKService {
+
+    @GET("method/users.get")
+    Call<VKResponse<List<User>>> getInformation(@Query("access_token") String accessToken);
 
     @GET("method/users.get")
     Call<VKResponse> addFriend(@Query("user_id") String user, @Query("v") String version, @Query("access_token") String accessToken);
