@@ -22,9 +22,14 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import support.IKYService;
 import support.VKService;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AccountFragment.OnFragmentInteractionListener
@@ -35,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     private static VKService vkserv;
     private Retrofit retrofit;
     private SharedPreferences prefs;
+
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +62,38 @@ public class MainActivity extends AppCompatActivity
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         transaction.addToBackStack(null);
-        transaction.add(R.id.content_contaiter, HomeFragment.newInstance());
+
+        final SharedPreferences prefs = getSharedPreferences("app", Context.MODE_PRIVATE);
+        String id = prefs.getString("id", null);
+
+        homeFragment = HomeFragment.newInstance(id);
+        transaction.add(R.id.content_contaiter, homeFragment);
         transaction.commit();
 
-        prefs = getSharedPreferences("app", Context.MODE_PRIVATE);
-        prefs.getString("id", null);
+        if (id == null || id.equals("")) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://mysterious-reaches-47552.herokuapp.com/") //сервер Антона
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        SharedPreferences.Editor editor = prefs.edit();
-        //...
+            IKYService service = retrofit.create(IKYService.class);
 
+            service.getId().enqueue(new Callback<Long>() {
+                @Override
+                public void onResponse(Call<Long> call, Response<Long> response) {
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("id", response.body().toString());
+                    editor.commit();
+                    homeFragment.updateQRCode(response.body().toString());
+                    
+                }
 
-
-        editor.putString("id","");
-        editor.commit();
-
+                @Override
+                public void onFailure(Call<Long> call, Throwable t) {
+                    System.out.println(t);
+                }
+            });
+        }
 
     }
 
@@ -191,6 +216,7 @@ public class MainActivity extends AppCompatActivity
 //            });
 
         }
+
         // else continue with any other code you need in the method
     }
 
